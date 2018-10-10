@@ -1,0 +1,23 @@
+{
+  "name": "gpt-cli",
+  "version": "1.0.0",
+  "description": "The official Command Line Interface for the Genesis Pro Tools package.",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cjkoepke/genesisprotools-cli.git"
+  },
+  "author": "Calvin Koepke <hello@calvinkoepke.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/cjkoepke/genesisprotools-cli/issues"
+  },
+  "homepage": "https://github.com/cjkoepke/genesisprotools-cli#readme",
+  "bin": {
+    "gpt": "./index.js"
+  },
+  "dependencies": {
+    "commander": "^2.19.0",
+    "shelljs": "^0.8.2"
+  }
+}
