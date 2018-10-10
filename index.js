@@ -1,28 +1,49 @@
 #!/usr/bin/env node
-var PROGRAM = require('commander');
-var SHELL   = require('shelljs');
-var FS      = require('fs');
+var program   = require('commander');
+var shell     = require('shelljs');
+var fs        = require('fs');
+var prompt    = require('promptly');
 
-// Genesis Pro Tools path object.
-var GPT_VENDOR_PATH = `${process.cwd()}/vendor/gpt/core`
+// Tools
+var constants = require('./constants');
+var build     = require('./scripts/build-commands');
 
-PROGRAM
+program
     .version('0.1.0')
     .arguments('<cmd>')
     .action(function(cmd) {
         
         switch( cmd ) {
             case 'init':
-                console.log( GPT_VENDOR_PATH )
-                if ( ! FS.existsSync(GPT_VENDOR_PATH) ) {
-                    console.error('You must have the Genesis Pro Tools package installed in the default /vendor folder before this action can be performed.');
+                
+                // If vendor path not found, request generation of composer.
+                if ( ! fs.existsSync(constants.vendor_path) ) {
+                
+                    prompt.confirm('Genesis Pro Tools are not installed. Would you like us to do it for you?')
+                        .then(function(res) {
+                            if ( ! res ) {
+                                return;
+                            }
+
+                            prompt.prompt('Project name (must follow vendor/name pattern): ')
+                                .then(function(name) {
+                                    shell.exec( `sudo chmod +x ${__dirname}/scripts/shell/composer.sh` );
+                                    shell.exec( `sudo ${__dirname}/scripts/shell/composer.sh ${name} ${process.cwd()}`);
+                                    shell.exec( `composer install` );
+                                })
+                        });
+
                     return;
                 }
-                SHELL.exec( `sudo ${GPT_VENDOR_PATH}/scripts/shell/functions.sh` );
+            
+                // Build Theme Files.
+                build.functions();
+
                 break;
             default:
-                console.log('Sorry, that command is not valid.');
+                console.error('Invalid command: %s\nSee --help for a list of available commands.', program.args.join(' '));
+                process.exit(1);
         }
 
     })
-    .parse(process.argv)
+    .parse(process.argv);

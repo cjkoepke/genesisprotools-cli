@@ -18,6 +18,7 @@
   },
   "dependencies": {
     "commander": "^2.19.0",
+    "promptly": "^3.0.3",
     "shelljs": "^0.8.2"
   }
 }
