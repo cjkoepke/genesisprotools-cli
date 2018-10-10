@@ -1,29 +1,18 @@
 #!/bin/bash
-NAME="$1"
-DIR="$2"
+SLUG="$1"
+VER="$2"
+DIR="$3"
 
 cd $DIR
 cat > composer.json << EOF
 {
-    "name": "${NAME}",
+    "name": "vendor/name",
     "type": "project",
-    "authors": [
-        {
-            "name": "Calvin Koepke",
-            "email": "hello@calvinkoepke.com"
-        }
+	"repositories": [
+        {"type": "composer", "url": "https://genesis-pro-tools.repo.packagist.com/${SLUG}/"}
     ],
-	"repositories": {
-		"core": {
-			"type": "path",
-			"url": "~/Repos/genesisprotools",
-			"options": {
-				"symlink": true
-			}
-		}
-	},
     "require": {
-		"gpt/core": "dev-master"
+		"gpt/core": "${VER}"
 	}
 }
 EOF

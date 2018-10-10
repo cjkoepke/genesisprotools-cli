@@ -1,31 +1,35 @@
 var shell     = require('shelljs');
 var constants = require( '../constants');
-var path      = require('path');
-var fs        = require('fs');
-var prompt    = require('promptly');
 
 module.exports = {
-    composer: function() {
+    composer: function(args) {
 
-        var name = 'your-name/theme';
-        prompt.start();
+        // Make executable.
+        shell.exec( `sudo chmod +x ${__dirname}/shell/composer.sh` );
 
-        prompt.get(['name'], function(err, response) {
-            name = response;
-        });
+        // Execute.
+        shell.exec( `sudo ${__dirname}/shell/composer.sh ${args.slug} ${args.version} ${process.cwd()}`);
 
-        return new Promise(function(resolve, reject) {
-            if ( shell.exec(`sudo ${path.resolve(__filename)}/scripts/shell/composer.sh ${name}`).code !== 0 ) {
-                if ( fs.existsSync( `../composer.json` ) ) {
-                    resolve();
-                }
-            } else {
-                reject();
-            }
-        });
+        // Make read-only.
+        shell.exec( `sudo chmod +r ${__dirname}/shell/composer.sh` );
+
+        if ( ! args.token ) {
+            shell.exec(`composer config --global --auth http-basic.genesis-pro-tools.repo.packagist.com token ${args.token}`);
+        }
+        
+        shell.exec(`composer install`);
         
     },
     functions: function() {
+
+        // Make executable.
+        shell.exec( `sudo chmod +x ${constants.vendor_path}/scripts/shell/functions.sh` );
+
+        // Execute.
         shell.exec(`sudo ${constants.vendor_path}/scripts/shell/functions.sh`);
+
+        // Make read-only.
+        shell.exec( `sudo chmod +r ${constants.vendor_path}/scripts/shell/functions.sh` );
+
     }
 }
