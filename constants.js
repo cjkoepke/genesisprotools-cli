@@ -1,3 +1,3 @@
 module.exports = {
-    vendor_path: `${process.cwd()}/vendor/gpt/core`
+    vendor_path: `${process.cwd()}/vendor/gpt`
 }

@@ -27,11 +27,11 @@ module.exports = () => {
             console.log('Now building boilerplate files...');
             
             /**
-             * Execute all shell scripts in the Genesis Pro Tools /scripts/files/starter/ folder.
+             * Copy over the Uno starter theme in the gpt/core package.
              * 
              * @since 1.0.0
              */
-            if ( shell.cp(`-R`, `${constants.vendor_path}/files/starter/*`, './').code === 0 ) {
+            if ( shell.cp(`-R`, `${constants.vendor_path}/core/files/uno`, './').code === 0 ) {
                 resolve();
             } else {
                 reject();

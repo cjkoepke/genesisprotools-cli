@@ -1,10 +1,10 @@
 var core = require('./core');
-var starter = require('./starter');
+var uno  = require('./uno');
 
 module.exports = () => {
     core()
         .then(function(res) {
-            starter();
+            uno();
         })
         .catch(function() {
             console.log('\nAborted');
