@@ -1,8 +1,8 @@
-var shell    = require('shelljs');
-var inquirer = require('inquirer');
-var exists   = require('command-exists');
-var chalk    = require('chalk');
-var link     = require('terminal-link');
+const fs       = require('fs');
+const shell    = require('shelljs');
+const inquirer = require('inquirer');
+const paths    = require('../paths');
+const creds    = require('../credentials');
 
 /**
  * Installs default composer.json file and initiates installation.
@@ -13,47 +13,39 @@ module.exports = () => {
     
     return new Promise(function(resolve, reject) {
 
-        inquirer.prompt([
-            {
-                type: 'input',
-                message: 'Repository Slug:',
-                name: 'slug',
-            },
-            {
-                type: 'input',
-                message: 'Genesis Pro Tools Version:',
-                default: '^1.0',
-                name: 'version'
-            },
-            {
-                type: 'input',
-                message: 'Your unique access token for Genesis Pro Tools []:',
-                default: false,
-                name: 'token'
+        if ( fs.existsSync(`${process.cwd()}/composer.json`) ) {
+            if ( shell.exec(`composer require gtp/core`).code === 0 ) {
+                resolve();
+            } else {
+                reject();
             }
-        ])
+        }
+
+        let queries = [
+            {
+                type: 'input',
+                message: 'Project Name:',
+                default: 'vendor/name',
+                name: 'name'
+            }
+        ]
+
+        inquirer.prompt(queries)
             .then(function(args) {
-                
-                shell.exec( `sh ${__dirname}/../shell/composer.sh ${args.slug} ${args.version} ${process.cwd()}`);
+                shell
+                    .cat(`${paths.root_path}/files/composer.json`)
+                    .sed(/\${NAME}/, args.name.toString())
+                    .sed(/\${USERNAME}/, creds.username.toString())
+                    .to(`${process.cwd()}/composer.json`)
+                    .exec('composer require gpt/core');
 
-                if ( ! exists('composer') ) {
-                    console.log(link( 
-                        chalk.yellow('Oops! Composer is a required dependency for GPT!'),
-                        'https://docs.genesisprotools.com/requirements'
-                    ));
-                    shell.exit(1);
-                }
-
-                if ( ! args.token ) {
-                    shell.exec(`composer config --global --auth http-basic.genesis-pro-tools.repo.packagist.com token ${args.token}`);
-                }
-
+            })
+            .then(function() {
                 if ( shell.exec(`composer install`).code === 0 ) {
                     resolve();
                 } else {
                     reject();
                 }
-
             })
             .catch(function(){
                 reject();

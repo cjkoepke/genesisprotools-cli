@@ -1,24 +1,25 @@
-var shell     = require('shelljs');
-var fs        = require('fs');
-var constants = require('../constants');
+const shell = require('shelljs');
+const fs    = require('fs');
+const paths = require('../paths');
+const chalk = require('chalk');
 
 /**
  * Copies over starter theme files.
  * 
  * @since 1.0.0
  */
-module.exports = () => {
+module.exports = program => {
 
     return new Promise(function(resolve, reject) {
 
-        if ( ! fs.existsSync(`${constants.vendor_path}`) ) {
+        if ( ! fs.existsSync(`${paths.vendor_path}/core/files/uno`) ) {
 
             /**
              * Prompt user to install core dependencies if not installed.
              * 
              * @since 1.0.0
              */
-            console.log('Starter theme files require core dependencies. Run `gpt core` to install.');
+            console.log(chalk.yellow('Starter theme files require core dependencies.\n') + 'Run `gpt --help`.');
             reject();
             shell.exit(1);
 
@@ -31,7 +32,8 @@ module.exports = () => {
              * 
              * @since 1.0.0
              */
-            if ( shell.cp(`-R`, `${constants.vendor_path}/core/files/uno`, './').code === 0 ) {
+            if ( shell.cp(`-R`, `${paths.vendor_path}/core/files/uno/*`, './').code === 0 ) {
+                console.log(chalk.green.bold('Uno successfully installed.'));
                 resolve();
             } else {
                 reject();
