@@ -3,7 +3,13 @@ const program = require('yargs');
 const exists  = require('command-exists');
 const chalk   = require('chalk');
 const link    = require('terminal-link');
+const user    = require('./user');
 
+/**
+ * Make sure Composer is available.
+ * 
+ * @since 1.0.0
+ */
 if ( ! exists('composer') ) {
     console.log(link( 
         chalk.yellow('Oops! Composer is a required dependency for GPT!'),
@@ -16,6 +22,15 @@ if ( ! exists('composer') ) {
 const core    = require('./src/core');
 const uno     = require('./src/uno');
 const config  = require('./src/config');
+
+/**
+ * Make sure user is configured.
+ * 
+ * @since 1.0.0
+ */
+if ( ! user ) {
+    config();
+}
 
 program
     .version('0.1.0')
@@ -50,9 +65,20 @@ program
         }
 
         commands.reduce(function(promiseChain, command) {
-            return promiseChain.then(() => command(program))
+            return promiseChain
+                .then(() => command())
+                .catch(e => console.log(e))
         }, Promise.resolve());
 
     })
-    .command('config', 'Configure your GPT account credentials.', {}, config)
+    .command('config', 'Configure your GPT account credentials.', {}, function() {
+        
+        // We check config at the first operation, so abort this override.
+        if ( ! user ) {
+            return;
+        }
+
+        config();
+
+    })
     .argv

@@ -2,7 +2,7 @@ const fs       = require('fs');
 const shell    = require('shelljs');
 const inquirer = require('inquirer');
 const paths    = require('../paths');
-const creds    = require('../credentials');
+const user     = require('../user');
 
 /**
  * Installs default composer.json file and initiates installation.
@@ -14,10 +14,10 @@ module.exports = () => {
     return new Promise(function(resolve, reject) {
 
         if ( fs.existsSync(`${process.cwd()}/composer.json`) ) {
-            if ( shell.exec(`composer require gtp/core`).code === 0 ) {
-                resolve();
+            if ( shell.exec(`composer require gpt/core:dev-master`).code === 0 && fs.existsSync(`${paths.vendor_path}/core/`) ) {
+                return resolve('Succesfully added core module.');
             } else {
-                reject();
+                return reject('Could not install core module.');
             }
         }
 
@@ -30,26 +30,26 @@ module.exports = () => {
             }
         ]
 
-        inquirer.prompt(queries)
+        return inquirer.prompt(queries)
             .then(function(args) {
                 shell
-                    .cat(`${paths.root_path}/files/composer.json`)
+                    .cat(`${paths.root_path}/templates/composer.json`)
                     .sed(/\${NAME}/, args.name.toString())
-                    .sed(/\${USERNAME}/, creds.username.toString())
+                    .sed(/\${USERNAME}/, user.username.toString())
                     .to(`${process.cwd()}/composer.json`)
-                    .exec('composer require gpt/core');
+                    .exec('composer require gpt/core:dev-master');
 
             })
             .then(function() {
-                if ( shell.exec(`composer install`).code === 0 ) {
-                    resolve();
+                if ( fs.existsSync(`${paths.vendor_path}/core/`) ) {
+                    return resolve('Successfully installed!');
                 } else {
-                    reject();
+                    return reject('Core module not installed.');
                 }
             })
-            .catch(function(){
-                reject();
-                console.log('\nAborted.');
+            .catch(function(e){
+                console.log(e);
+                return reject();
             });
         
     }).catch(function() {});
