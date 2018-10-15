@@ -1,6 +1,6 @@
 {
   "name": "gpt-cli",
-  "version": "0.2.0",
+  "version": "0.1.0",
   "description": "The official Command Line Interface for the Genesis Pro Tools package.",
   "main": "index.js",
   "repository": {

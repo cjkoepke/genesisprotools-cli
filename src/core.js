@@ -36,9 +36,14 @@ module.exports = () => {
                     .cat(`${paths.root_path}/templates/composer.json`)
                     .sed(/\${NAME}/, args.name.toString())
                     .sed(/\${USERNAME}/, user.username.toString())
-                    .to(`${process.cwd()}/composer.json`)
-                    .exec('composer require gpt/core:dev-master');
+                    .to(`${process.cwd()}/composer.json`);
 
+            })
+            .then(function() {
+                if ( shell.exec('composer require gpt/core:dev-master').code !== 0 ) {
+                    console.log('Composer could not install Core package. Please run `gpt config` and try again.');
+                    shell.exit(1);
+                }
             })
             .then(function() {
                 if ( fs.existsSync(`${paths.vendor_path}/core/`) ) {
