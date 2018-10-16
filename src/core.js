@@ -14,7 +14,7 @@ module.exports = () => {
     return new Promise(function(resolve, reject) {
 
         if ( fs.existsSync(`${process.cwd()}/composer.json`) ) {
-            if ( shell.exec(`composer require gpt/core:dev-master`).code === 0 && fs.existsSync(`${paths.vendor_path}/core/`) ) {
+            if ( shell.exec(`composer require gpt/core`).code === 0 && fs.existsSync(`${paths.vendor_path}/core/`) ) {
                 return resolve('Succesfully added core module.');
             } else {
                 return reject('Could not install core module.');
@@ -40,7 +40,7 @@ module.exports = () => {
 
             })
             .then(function() {
-                if ( shell.exec('composer require gpt/core:dev-master').code !== 0 ) {
+                if ( shell.exec('composer require gpt/core').code !== 0 ) {
                     console.log('Composer could not install Core package. Please run `gpt config` and try again.');
                     shell.exit(1);
                 }
