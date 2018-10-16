@@ -15,6 +15,10 @@ const themeReplace = (find, replace) => {
             shell.sed('-i', new RegExp(`${find}_`),  `${replace}_`,  file);
             shell.sed('-i', new RegExp(`${find}-`),  `${replace}-`,  file);
             shell.sed('-i', new RegExp(`'${find}'`), `'${replace}'`, file);
+
+            if ( file === 'package.json' ) {
+                shell.sed('-i', new RegExp(`"${find}"`), `"${replace}"`, file);
+            }
         });
 }
 

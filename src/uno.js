@@ -84,9 +84,15 @@ module.exports = () => {
         inquirer.prompt([
             {
                 type: 'input',
-                message: 'Theme textdomain?',
+                message: 'Theme Slug:',
                 default: 'uno',
-                name: 'textdomain'
+                name: 'slug'
+            },
+            {
+                type: 'input',
+                message: 'Theme Name:',
+                default: 'Uno',
+                name: 'name'
             }
         ])
             .then(function(args) {
@@ -96,13 +102,14 @@ module.exports = () => {
                 // Copy template.
                 shell.cp(`-R`, `${paths.vendor_path}/core/uno/*`, process.cwd());
 
-                if ( args.textdomain === 'uno' ) {
+                if ( args.slug === 'uno' ) {
                     console.log(chalk.green('Done!'));
                     return;
                 }
                 
-                // Get list of copied files.
-                themeReplace( 'uno', args.textdomain );
+                // Replace copied file slugs with user input.
+                themeReplace( 'uno', args.slug );
+                themeReplace( 'Uno', args.name );
 
             })
             .then(function() {

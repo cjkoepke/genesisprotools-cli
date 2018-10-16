@@ -42,7 +42,7 @@ program
         alias: 'u',
         description: 'Install the Genesis Pro Tools starter theme.'
     })
-    .command('install', 'Install Genesis Pro Tool modules.', {}, function(argv) {
+    .command('theme', 'Install Genesis Pro Tool modules for theme development.', {}, function(argv) {
 
         /**
          * Build a command pipeline to install multiple modules in order.
