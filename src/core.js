@@ -15,9 +15,9 @@ module.exports = () => {
 
         if ( fs.existsSync(`${process.cwd()}/composer.json`) ) {
             if ( shell.exec(`composer require gpt/core`).code === 0 && fs.existsSync(`${paths.vendor_path}/core/`) ) {
-                return resolve('Succesfully added core module.');
+                return resolve('Core theme package added.');
             } else {
-                return reject('Could not install core module.');
+                return reject('Could not install Core Theme package.');
             }
         }
 
@@ -52,7 +52,7 @@ module.exports = () => {
                 if ( fs.existsSync(`${paths.vendor_path}/core/`) ) {
                     return resolve('Successfully installed!');
                 } else {
-                    return reject('Core module not installed.');
+                    return reject('Core Theme module not installed.');
                 }
             })
             .catch(function(e){

@@ -39,7 +39,7 @@ module.exports = () => {
                                     chalk.yellow('Now generating Uno theme files...')
                                 );
 
-                                opyUnoFiles(resolve, reject);
+                                copyUnoFiles(resolve, reject);
                             }
                         })
                     }
@@ -67,7 +67,7 @@ module.exports = () => {
      */
     function copyUnoFiles(resolve, reject) {
         
-        inquirer.prompt([
+        return inquirer.prompt([
             {
                 type: 'input',
                 message: 'Theme Slug:',
@@ -99,11 +99,20 @@ module.exports = () => {
 
             })
             .then(function() {
-                resolve()
+                console.log(chalk.yellow('Now installing Node Modules and building assets...'))
+                const assets = spawn(`npm install && gulp build`, {
+                    stdio: 'inherit',
+                    shell: true
+                })
+                assets.on('exit', function(code) {
+                    if ( code === 0 ) {
+                        resolve('Uno starter files successfully generated!')
+                    }
+                })
             })
             .catch(function(e) {
                 console.log(e);
-                reject()
+                reject('Something went wrong. Make sure Node and Composer are both installed.')
             });
     }
 

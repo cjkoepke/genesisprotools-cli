@@ -55,6 +55,8 @@ program
         if ( argv.modules ) {
             argv.modules.forEach(module => {
                 modules[module]()
+                    .then(msg => console.log(chalk.green.bold('Success: ') + msg))
+                    .catch(e => console.log(e));
             })
         }
 
@@ -63,7 +65,7 @@ program
 
         if ( argv.cmd ) {
             theme[argv.cmd]()
-                .then(() => console.log(chalk.green('Success!')))
+                .then(msg => console.log(chalk.green.bold('Success: ') + msg))
                 .catch(e => console.log(e));
         }
 
