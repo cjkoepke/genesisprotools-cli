@@ -39,14 +39,7 @@ module.exports = () => {
                                     chalk.yellow('Now generating Uno theme files...')
                                 );
 
-                                const uno = copyUnoFiles();
-
-                                if ( uno.code === 0 ) {
-                                    console.log(chalk.green.bold('Uno files successfully generated.'));
-                                    return resolve();
-                                } else {
-                                    return reject();
-                                }
+                                opyUnoFiles(resolve, reject);
                             }
                         })
                     }
@@ -61,25 +54,18 @@ module.exports = () => {
              * 
              * @since 1.0.0
              */
-            const uno = copyUnoFiles();
-
-            if ( uno.code === 0 ) {
-                console.log(chalk.green.bold('Uno files successfully generated.'));
-                return resolve();
-            } else {
-                return reject();
-            }
+            copyUnoFiles(resolve, reject)
 
         }
 
-    }).catch(function() {});
+    }).catch(function(e) {console.log(e)});
 
     /**
      * Copies Uno files from the Core package directory to current working directory.
      * 
      * @since 1.0.0
      */
-    function copyUnoFiles() {
+    function copyUnoFiles(resolve, reject) {
         
         inquirer.prompt([
             {
@@ -113,10 +99,11 @@ module.exports = () => {
 
             })
             .then(function() {
-                console.log(chalk.green('Done!'));
+                resolve()
             })
             .catch(function(e) {
-
+                console.log(e);
+                reject()
             });
     }
 

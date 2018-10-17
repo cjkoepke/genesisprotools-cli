@@ -32,11 +32,14 @@ module.exports = () => {
 
         return inquirer.prompt(queries)
             .then(function(args) {
-                shell
-                    .cat(`${paths.root_path}/templates/composer.json`)
-                    .sed(/\${NAME}/, args.name.toString())
-                    .sed(/\${USERNAME}/, user.username.toString())
-                    .to(`${process.cwd()}/composer.json`);
+
+                if ( ! fs.existsSync(`${process.cwd()}/composer.json`) ) {
+                    shell
+                        .cat(`${paths.root_path}/templates/composer.json`)
+                        .sed(/\${NAME}/, args.name.toString())
+                        .sed(/\${USERNAME}/, user.username.toString())
+                        .to(`${process.cwd()}/composer.json`);
+                }
 
             })
             .then(function() {

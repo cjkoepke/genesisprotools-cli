@@ -19,9 +19,19 @@ if ( ! exists('composer') ) {
 }
 
 // Modules
-const core    = require('./src/core');
-const uno     = require('./src/uno');
-const config  = require('./src/config');
+const modules = {
+    core:   require('./src/core')
+}
+
+// Utilities
+const utilities = {
+    uno: require('./src/uno'),
+}
+
+// Setup
+const setup = {
+    config: require('./src/config')
+}
 
 /**
  * Make sure user is configured.
@@ -32,53 +42,65 @@ if ( ! user ) {
     config();
 }
 
+
+/**
+ * Install commands.
+ * 
+ * @since 1.0.0
+ */
 program
     .version('0.1.0')
-    .option( 'core', {
-        alias: 'c',
-        description: 'Install the Genesis Pro Tools core module.'
+    .option( 'modules', {
+        type: 'array',
+        alias: 'm',
+        description: 'Names of modules to install.'
     })
-    .option( 'uno', {
-        alias: 'u',
-        description: 'Install the Genesis Pro Tools starter theme.'
-    })
-    .command('theme', 'Install Genesis Pro Tool modules for theme development.', {}, function(argv) {
-
-        /**
-         * Build a command pipeline to install multiple modules in order.
-         * 
-         * @since 1.0.0
-         */
-        let commands = [];
+    .command('install', 'Install Genesis Pro Tool Composer packages.', {}, function(argv) {
         
-        if ( argv.core ) {
-            commands.push(core);
+        if ( argv.modules ) {
+            argv.modules.forEach(module => {
+                modules[module]()
+            })
         }
+
+    })
+    .argv;
+
+/**
+ * Theme commands.
+ * 
+ * @since 1.0.0
+ */
+program
+    .option( 'uno', {
+        type: 'boolean',
+        description: 'Install the Genesis Pro Tools Uno theme files.'
+    })
+    .command('theme', 'Perform theme-level commands.', {}, function(argv) {
 
         if ( argv.uno ) {
-            commands.push(uno);
+            utilities.uno()
+                .then(() => console.log(chalk.green('Success!')))
+                .catch(e => console.log(e));
         }
-
-        // Shortcut for core dependency.
-        if ( commands.length === 0 ) {
-            commands.push(core);
-        }
-
-        commands.reduce(function(promiseChain, command) {
-            return promiseChain
-                .then(() => command())
-                .catch(e => console.log(e))
-        }, Promise.resolve());
 
     })
-    .command('config', 'Configure your GPT account credentials.', {}, function() {
+    .argv;
+
+/**
+ * Setup commands.
+ * 
+ * @since 1.0.0
+ */
+program
+    .command('setup', 'Configure your GPT account credentials.', {}, function() {
         
         // We check config at the first operation, so abort this override.
         if ( ! user ) {
             return;
         }
 
-        config();
+        setup.config();
 
     })
     .argv
