@@ -20,12 +20,12 @@ if ( ! exists('composer') ) {
 
 // Modules
 const modules = {
-    core:   require('./src/core')
+    'core-theme':   require('./src/core')
 }
 
-// Utilities
-const utilities = {
-    uno: require('./src/uno'),
+// Theme commands
+const theme = {
+    'start': require('./src/uno'),
 }
 
 // Setup
@@ -50,12 +50,7 @@ if ( ! user ) {
  */
 program
     .version('0.1.0')
-    .option( 'modules', {
-        type: 'array',
-        alias: 'm',
-        description: 'Names of modules to install.'
-    })
-    .command('install', 'Install Genesis Pro Tool Composer packages.', {}, function(argv) {
+    .command('install [modules..]', 'Install Genesis Pro Tool Composer packages.', {}, function(argv) {
         
         if ( argv.modules ) {
             argv.modules.forEach(module => {
@@ -64,35 +59,15 @@ program
         }
 
     })
-    .argv;
+    .command('theme <cmd>', 'Perform theme-level commands.', {}, function(argv) {
 
-/**
- * Theme commands.
- * 
- * @since 1.0.0
- */
-program
-    .option( 'uno', {
-        type: 'boolean',
-        description: 'Install the Genesis Pro Tools Uno theme files.'
-    })
-    .command('theme', 'Perform theme-level commands.', {}, function(argv) {
-
-        if ( argv.uno ) {
-            utilities.uno()
+        if ( argv.cmd ) {
+            theme[argv.cmd]()
                 .then(() => console.log(chalk.green('Success!')))
                 .catch(e => console.log(e));
         }
 
     })
-    .argv;
-
-/**
- * Setup commands.
- * 
- * @since 1.0.0
- */
-program
     .command('setup', 'Configure your GPT account credentials.', {}, function() {
         
         // We check config at the first operation, so abort this override.
@@ -103,4 +78,4 @@ program
         setup.config();
 
     })
-    .argv
+    .argv;
