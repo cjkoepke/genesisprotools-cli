@@ -25,7 +25,7 @@ const modules = {
 
 // Theme commands
 const theme = {
-    'start': require('./src/uno'),
+    'init': require('./src/uno'),
 }
 
 // Setup
@@ -70,7 +70,7 @@ program
         }
 
     })
-    .command('setup', 'Configure your GPT account credentials.', {}, function() {
+    .command('config', 'Configure your GPT account credentials.', {}, function() {
         
         // We check config at the first operation, so abort this override.
         if ( ! user ) {
