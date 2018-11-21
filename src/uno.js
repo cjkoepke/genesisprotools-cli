@@ -29,7 +29,7 @@ module.exports = () => {
             })
                 .then(res => {
                     if ( res.install ) {
-                        const installed = spawn('gpt install --core', {
+                        const installed = spawn('gpt install core-theme', {
                             stdio: 'inherit',
                             shell: true
                         });
@@ -101,8 +101,9 @@ module.exports = () => {
             .then(function() {
                 console.log(chalk.yellow('Now installing Node Modules and building assets...'))
                 const assets = spawn(`npm install && gulp build`, {
-                    stdio: 'inherit',
-                    shell: true
+                    stdio: ['pipe', 'pipe', 'ignore'],
+                    shell: true,
+
                 })
                 assets.on('exit', function(code) {
                     if ( code === 0 ) {

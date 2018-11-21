@@ -22,12 +22,12 @@ gpt install core-theme
 ### `gpt theme <cmd>`
 Performs theme-level commands, like search/replace, copying of starter files, and more.
 
-#### `start`
+#### `init`
 Copies over theme files from the Genesis Pro Tools starter theme, Uno. Since this includes required files for a theme,
-it is recommended to only run it during a first-time install (thus using the command name `start` to emphasize it's purpose).
+it is recommended to only run it during a first-time install (thus using the command name `init` to emphasize it's purpose).
 
 Example for installing the Core Theme package and copying Uno theme files immediately after:
 
 ```bash
-gpt install core-theme && gpt theme start
+gpt install core-theme && gpt theme init
 ```
