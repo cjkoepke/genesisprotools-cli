@@ -2,7 +2,6 @@ const fs       = require('fs');
 const shell    = require('shelljs');
 const inquirer = require('inquirer');
 const paths    = require('../paths');
-const user     = require('../user');
 
 /**
  * Installs default composer.json file and initiates installation.
@@ -37,7 +36,6 @@ module.exports = () => {
                     shell
                         .cat(`${paths.root_path}/templates/composer.json`)
                         .sed(/\${NAME}/, args.name.toString())
-                        .sed(/\${USERNAME}/, user.username.toString())
                         .to(`${process.cwd()}/composer.json`);
                 }
 

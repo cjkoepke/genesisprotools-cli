@@ -1,8 +1,5 @@
 {
     "name": "${NAME}",
     "type": "project",
-	"repositories": [
-        {"type": "composer", "url": "https://genesis-pro-tools.repo.packagist.com/${USERNAME}/"}
-    ],
     "minimum-stability": "beta"
 }

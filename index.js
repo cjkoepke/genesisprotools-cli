@@ -3,7 +3,6 @@ const program = require('yargs');
 const exists  = require('command-exists');
 const chalk   = require('chalk');
 const link    = require('terminal-link');
-const user    = require('./user');
 
 /**
  * Make sure Composer is available.
@@ -26,20 +25,6 @@ const modules = {
 // Theme commands
 const theme = {
     'init': require('./src/uno'),
-}
-
-// Setup
-const setup = {
-    config: require('./src/config')
-}
-
-/**
- * Make sure user is configured.
- * 
- * @since 1.0.0
- */
-if ( ! user ) {
-    config();
 }
 
 
@@ -68,16 +53,6 @@ program
                 .then(msg => console.log(chalk.green.bold('Success: ') + msg))
                 .catch(e => console.log(e));
         }
-
-    })
-    .command('config', 'Configure your GPT account credentials.', {}, function() {
-        
-        // We check config at the first operation, so abort this override.
-        if ( ! user ) {
-            return;
-        }
-
-        setup.config();
 
     })
     .argv;
